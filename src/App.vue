@@ -22,7 +22,7 @@
               <button
                 type="button"
                 class="btn btn-outline-success"
-                @click="getCoords"
+                @click.prevent="getCoords"
               >
                 Find
               </button>
@@ -32,7 +32,9 @@
 
         <div class="col">
           <div class="variants">
-            <div class="variants__title">Варианты мест</div>
+            <div class="variants__title">
+              Варианты мест для {{ this.placeSearch }}
+            </div>
             <ul class="variants__buttons">
               <button
                 type="button"
@@ -45,7 +47,7 @@
             </ul>
             <ul class="variants__coords">
               <li class="coord" v-for="(coor, id) in coordsList" :key="id">
-                {{ coor.lat }}<br />{{ coor.lon }}
+                lat: {{ coor.lat }}<br />lon: {{ coor.lon }}
               </li>
             </ul>
           </div>
@@ -108,15 +110,17 @@ export default {
   },
   methods: {
     getCoords: async function () {
-      const keyAPI = "fc66e5ec568a2bd3c45c86a9b418c2c2";
-      console.log(keyAPI);
-      console.log(this.placeSearch);
-      const coordsURL =
-        "http://api.openweathermap.org/data/2.5/weather?q=${this.placeSearch}&appid=fc66e5ec568a2bd3c45c86a9b418c2c2";
+      const keyAPI = "106696ea-af04-4082-b263-4e4fff5b5d0c";
+      const coordsURL = `https://graphhopper.com/api/1/geocode?q=${this.placeSearch}&locale=de&debug=true&key=${keyAPI}`;
       const response = await fetch(coordsURL);
       const data = await response.json();
       console.log(data);
-      this.placeSearch = "";
+      /* const keyAPI = "fc66e5ec568a2bd3c45c86a9b418c2c2";
+      const coordsURL = `http://api.openweathermap.org/data/2.5/weather?q=${this.placeSearch}&appid=${keyAPI}`;
+      const response = await fetch(coordsURL);
+      const data = await response.json();
+      console.log(data);
+      this.placeSearch = ""; */
     },
   },
 };
