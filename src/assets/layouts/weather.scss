@@ -1,0 +1,43 @@
+.weather{
+    margin-top: 30px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: url(https://mobimg.b-cdn.net/v3/fetch/a8/a8f4be4ceb654a9fa6ae9efad803fd7b.jpeg);
+    box-shadow: 5px 5px 5px rgba(199, 238, 240, 0.75);
+    border-radius: 20px 20px 0 0;
+    min-height: 50px;
+    opacity:0;
+    transition: 1s; 
+    animation: show 3s 1; 
+    animation-fill-mode: forwards; 
+    animation-delay: 1s;
+    &__descr{
+        font-weight: 700;
+        font-size: 20px;
+        font-style: italic;
+        color: #1c2f3f;
+    }
+    &__feels{
+        font-weight: 700;
+        font-size: 20px;
+        color: #1c2f3f;
+    }
+    &__temp{
+        text-shadow: 0 0 5px white, 0 0 10px white, 0 0 15px white, 0 0 20px rgb(221, 81, 46), 0 0 35px rgb(94, 21, 39), 0 0 40px rgb(151, 64, 64), 0 0 50px rgb(172, 92, 103), 0 0 75px rgb(149, 186, 197);
+        font-weight: 900;
+        font-size: 30px;
+        color: #040425;
+    }
+    &__humid{
+        font-weight: 700;
+        font-size: 20px;
+        color: #1c2f3f;
+    }
+    &__wind{
+        font-weight: 700;
+        font-size: 20px;
+        color: #1c2f3f;
+    }
+}

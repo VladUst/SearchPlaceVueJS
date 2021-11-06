@@ -1,9 +1,15 @@
+
 .variants{
     background: white;
     box-shadow: 5px 5px 5px rgba(199, 238, 240, 0.75);
     padding: 20px;
-    height: 200px;
+    min-height: 200px;
     border-radius: 20px;
+    opacity:0;
+    transition: 1s; 
+    animation: show 1s 1; 
+    animation-fill-mode: forwards; 
+    animation-delay: 1s;
     &__title{
         margin-top: 10px;
         font-weight: 700;
