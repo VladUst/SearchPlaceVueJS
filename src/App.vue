@@ -19,6 +19,9 @@
                 placeholder="What city/country?"
                 autocomplete="off"
               />
+              <p class="place-not-found" v-show="placeNotFound">
+                Place not found!
+              </p>
               <button
                 type="button"
                 class="btn btn-outline-success"
@@ -30,7 +33,7 @@
           </div>
         </div>
 
-        <div class="col" v-if="placesShow">
+        <div class="col" v-show="placesShow">
           <div class="variants">
             <div class="variants__title">
               Варианты мест для {{ this.placeSearch }}
@@ -58,7 +61,7 @@
         </div>
 
         <div class="col-12">
-          <div class="weather" v-if="weatherShow">
+          <div class="weather" v-show="weatherShow">
             <div class="weather__descr">{{ weatherInfo.descr }}</div>
             <div class="weather__feels">
               feels: {{ weatherInfo.feels }} &#8451;
@@ -67,7 +70,7 @@
             <div class="weather__humid">humid: {{ weatherInfo.humid }}</div>
             <div class="weather__wind">wind: {{ weatherInfo.wind }}</div>
           </div>
-          <ul class="places" v-if="landmarksShow">
+          <ul class="places" v-show="landmarksShow">
             <div
               class="places__info"
               v-for="(info, id) in landmarksInfo"
@@ -78,6 +81,9 @@
               <div class="rate">Оценка: {{ info.rate }}</div>
             </div>
           </ul>
+          <div class="no-landmarks" v-show="landmarksNotFound">
+            <p>Увы, но поблизости нет ничего интересного &#128532;</p>
+          </div>
         </div>
       </div>
     </div>
@@ -91,6 +97,7 @@ export default {
       placeSearch: "",
 
       placesShow: false,
+      placeNotFound: false,
       cityPlacesInfo: [
         { id: 0, name: "???", lat: "???", lng: "???" },
         { id: 1, name: "???", lat: "???", lng: "???" },
@@ -107,7 +114,9 @@ export default {
         humid: "?",
         wind: "?",
       },
+
       landmarksShow: false,
+      landmarksNotFound: false,
       landmarksInfo: [
         {
           id: 0,
@@ -148,6 +157,10 @@ export default {
       const coordsURL = `https://graphhopper.com/api/1/geocode?q=${this.placeSearch}&locale=de&debug=true&limit=20&key=${keyAPI}`;
       const response = await fetch(coordsURL);
       const data = await response.json();
+      if (data.hits.length <= 0) {
+        this.placeNotFound = true;
+        return;
+      }
       let j = 0;
       for (let i = 0; i < 5; ++i) {
         this.cityPlacesInfo[i].name = data.hits[j].name;
@@ -175,20 +188,22 @@ export default {
       this.weatherShow = true;
     },
     getLandmarks: async function (lat, lng) {
+      this.landmarksNotFound = false;
+      this.landmarksShow = false;
       const keyAPI = "5ae2e3f221c38a28845f05b6010a52c4fc902b08ca31deb9ef521d61";
       const radiusURL = `http://api.opentripmap.com/0.1/ru/places/radius?radius=5000&lon=${lng}&lat=${lat}&rate=2&format=json&limit=5&apikey=${keyAPI}`;
       const response = await fetch(radiusURL);
       const data = await response.json();
       let size = data.length < 5 ? data.length : 5;
+      if (data.length <= 0) {
+        this.landmarksNotFound = true;
+        return;
+      }
       for (let i = 0; i < size; ++i) {
         this.landmarksInfo[i].id = data[i].xid;
         this.landmarksInfo[i].name = data[i].name;
         this.landmarksInfo[i].rate = data[i].rate;
       }
-      /* const descrURL = `http://api.opentripmap.com/0.1/ru/places/xid/${this.landmarksInfo[2].id}?apikey=${keyAPI}`;
-      const descr_resp = await fetch(descrURL);
-      const descr_data = await descr_resp.json();
-      console.log(descr_data); */
       for (let i = 0; i < size; ++i) {
         try {
           const descrURL = `http://api.opentripmap.com/0.1/ru/places/xid/${this.landmarksInfo[i].id}?apikey=${keyAPI}`;
