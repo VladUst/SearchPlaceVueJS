@@ -95,9 +95,12 @@ export default {
   data() {
     return {
       placeSearch: "",
-
       placesShow: false,
       placeNotFound: false,
+      weatherShow: false,
+      landmarksShow: false,
+      landmarksNotFound: false,
+
       cityPlacesInfo: [
         { id: 0, name: "???", lat: "???", lng: "???" },
         { id: 1, name: "???", lat: "???", lng: "???" },
@@ -106,7 +109,6 @@ export default {
         { id: 4, name: "???", lat: "???", lng: "???" },
       ],
 
-      weatherShow: false,
       weatherInfo: {
         descr: "???",
         feels: "?",
@@ -115,8 +117,6 @@ export default {
         wind: "?",
       },
 
-      landmarksShow: false,
-      landmarksNotFound: false,
       landmarksInfo: [
         {
           id: 0,
@@ -153,6 +153,7 @@ export default {
   },
   methods: {
     getCoords: async function () {
+      this.placeNotFound = false;
       const keyAPI = "106696ea-af04-4082-b263-4e4fff5b5d0c";
       const coordsURL = `https://graphhopper.com/api/1/geocode?q=${this.placeSearch}&locale=de&debug=true&limit=20&key=${keyAPI}`;
       const response = await fetch(coordsURL);
@@ -187,6 +188,7 @@ export default {
       this.weatherInfo.wind = data.wind.speed;
       this.weatherShow = true;
     },
+
     getLandmarks: async function (lat, lng) {
       this.landmarksNotFound = false;
       this.landmarksShow = false;
